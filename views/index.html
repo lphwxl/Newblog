@@ -1,0 +1,61 @@
+<div class="main_body" id="main_body">
+        <div class="breadcrub">
+            当前位置：文章管理>文章列表
+        </div>
+        <div class="pannel">
+            <span class="sel_label">请选择文章分类：</span>
+
+            <form action="/article/list" id="articleType" method="get">
+                <select name="typeId" id="select" class="sel_opt">
+                    <option value="0">文章类型</option>
+                {{range $key,$val := .types}}
+                    <option {{if compare $val.Id $.typeId}}selected="selected"{{end}} value="{{$val.Id}}">{{$val.TypeName}}</option>
+                {{end}}
+                </select>
+            </form>
+
+
+            <table class="common_table">
+                <tr>
+                    <th width="43%">文章标题</th>
+                    <th width="10%">文章内容</th>
+                    <th width="16%">添加时间</th>
+                    <th width="7%">阅读量</th>
+                    <th width="7%">删除</th>
+                    <th width="7%">编辑</th>
+                    <th width="10%">文章类型</th>
+                </tr>
+
+                {{range $index,$val := .articles}}
+                    <tr>
+                        <td>{{$val.Title}}</td>
+                        <td><a href="/article/showArticleDetail?articleId={{$val.Id}}">查看详情</a></td>
+                        <td>{{"2006-01-02 15:04:05" | $val.CreatedAt.Format}}</td>
+                        <td>{{$val.Acount}}</td>
+                        <td><a href="/article/del?id={{$val.Id}}" class="dels">删除</a></td>
+                        <td><a href="/article/update?id={{$val.Id}}">编辑</a></td>
+                        <td>{{$val.ArticleType.TypeName}}</td>
+                    </tr>
+                {{end}}
+            </table>
+
+            <ul class="pagenation">
+                <li><a href="/article/list?page=1{{if gt .typeId 0}}&typeId={{.typeId}}{{end}}">首页</a></li>
+                <li><a href="/article/list?page={{.prePage}}{{if gt .typeId 0}}&typeId={{.typeId}}{{end}}">上一页 </a> </li>
+                <li> <a href="/article/list?page={{.nextPage}}{{if gt .typeId 0}}&typeId={{.typeId}}{{end}}">下一页</a></li>
+                <li><a href="/article/list?page={{.total}}{{if gt .typeId 0}}&typeId={{.typeId}}{{end}}">末页</a></li>
+                <li>共{{.count}}条记录/共{{.total}}页/当前{{.page}}页</li>
+            </ul>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $("#select").change(function (e) {
+        var  typeId = $(this).val()
+        if (typeId != 0){
+            $("#articleType").submit()
+        }else {
+            window.location.href = "/article/list"
+        }
+    })
+</script>

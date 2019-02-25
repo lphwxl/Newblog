@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+</head>
+<body>
+<div class="login_logo">
+        <img src="/static/img/logo.png" alt="">
+    </div>
+    <form  class="login_form" name = "login" action="/user/saveUserInfo" method="post">
+        <h1 class="login_title">用户注册</h1>
+        <input type="text" placeholder="用户名" class="input_txt" name="userName">
+        <input type="password" placeholder="密码" class="input_txt" name = "password">
+        <input type="submit" id="login" value="注 册" class="input_sub">
+    </form>
+    <div class="login_bg"></div>
+</body>
+<script src="/static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+    $("#login").click(function (event) {
+        var userName = $('input[name="userName"]').val()
+        var password = $('input[name="password"]').val()
+        $.ajax({
+            url:"/user/saveUserInfo",
+            type:"POST",
+            data:{userName:userName,password:password},
+            dataType:"json",
+            async:false,
+            success:function (data) {
+                if (data.Code == 200){
+                    alert(data.Message)
+                    window.location.href= data.Data[0]
+                }else {
+                    alert(data.Message)
+                }
+            }
+        })
+        return false;
+    })
+</script>
+</html>
